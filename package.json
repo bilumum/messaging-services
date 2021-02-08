@@ -1,0 +1,23 @@
+{
+  "name": "messaging-services",
+  "version": "1.0.0",
+  "description": "Backend services for react-messaging application.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bilumum/messaging-services.git"
+  },
+  "author": "bilumum",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bilumum/messaging-services/issues"
+  },
+  "homepage": "https://github.com/bilumum/messaging-services#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
+}
