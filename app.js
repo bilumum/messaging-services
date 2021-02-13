@@ -1,8 +1,10 @@
 var express = require("express");
+var cors = require('cors')
 
 const onlineUsersRoute = require('./routes/onlineUsers')
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 
