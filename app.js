@@ -2,7 +2,7 @@ var express = require("express");
 var cors = require('cors');
 //var io = require('socket.io');
 
-//var onlineUsers = [];
+var userSockets = {};
 const onlineUsersRoute = require('./routes/onlineUsers').router;
 var logoutUser = require('./routes/onlineUsers').logoutUser ;
 
@@ -37,20 +37,29 @@ io.sockets.on('connection', function (socket) {
   
     console.log(connectedUser.name + ' ' + connectedUser.surname + " connected");
 
-    socket.broadcast.emit("NEW_JOIN", connectedUser.name + ' ' + connectedUser.surname + "geldi");
+    userSockets[connectedUser.userId] = socket;
+    
+    socket.broadcast.emit("NEW_JOIN", connectedUser.name + ' ' + connectedUser.surname + " joined");
    
     socket.on('disconnect', () => {
 
-      //onlineUsers = onlineUsers.filter(user => user.userId === connectedUser.userId);
+      delete userSockets[connectedUser.userId];      
       logoutUser(connectedUser);
-      //console.log(onlineUsers);
-
-      socket.broadcast.emit("NEW_JOIN", connectedUser.name + ' ' + connectedUser.surname + "gitti");
+      
+      socket.broadcast.emit("NEW_JOIN", connectedUser.name + ' ' + connectedUser.surname + " left");
       console.log(connectedUser.name + ' ' + connectedUser.surname + " disconnected");
     });
 
+    socket.on("PRIVATE_MESSAGE", (data) => {
+      const to = data.to,
+            message = data.message;
+
+      if(userSockets[to]){
+        userSockets[to].emit("PRIVATE_MESSAGE", {
+          userId: connectedUser.userId,
+          message: message
+        });
+      }
+    });
   }
-
-  
-
 });
